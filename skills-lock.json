@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "skills": {
+    "guizang-ppt-skill": {
+      "source": "op7418/guizang-ppt-skill",
+      "sourceType": "github",
+      "skillPath": "SKILL.md",
+      "computedHash": "7e89aafbb0f7fbd33b4551fd77d0d0ed1ee856c44f5fadda0f3f9f2238587fc8"
+    },
+    "ppt-generation": {
+      "source": "bytedance/deer-flow",
+      "sourceType": "github",
+      "skillPath": "skills/public/ppt-generation/SKILL.md",
+      "computedHash": "1f95cca84b78975d6552da8e19c31fcb610ac80acc16f29c96c57bc6bc4d2173"
+    }
+  }
+}

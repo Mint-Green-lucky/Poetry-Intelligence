@@ -1,0 +1,53 @@
+# Environment and secrets
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+env/
+.uv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Frontend dependencies and build caches
+node_modules/
+.npm/
+.vite/
+
+# Generated frontend output
+frontend/dist/
+
+# Local application data and indexes
+echo a_datasets/ >> .gitignore
+echo *.pkl >> .gitignore
+evolving_logs.db
+*.db-journal
+storage/chroma/
+
+# Logs
+*.log
+logs/
+
+# IDE and OS files
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.example.json
+.idea/
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo

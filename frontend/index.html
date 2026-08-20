@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <title>诗承 · 智能诗词教学</title>
+        <link rel="stylesheet" href="/assets/styles.css">
+    </head>
+    <body>
+        <div class="aurora a"></div>
+        <div class="aurora b"></div>
+<div class="app-shell">
+    <header class="glass">
+        <a class="brand">
+            <i>诗</i>
+            <span><b>诗承</b><small>POETRY INTELLIGENCE</small></span>
+            </a><div id="status" class="status">系统连接中</div></header>
+<main><section class="side"><div class="intro"><p>智能诗词学习空间</p>
+    <h1>读诗，写诗，<em>懂诗。</em></h1>
+    <span>让创作有灵感，让阅读有回响。</span>
+</div><nav id="tabs" class="glass liquid">
+    <button class="active" data-tab="generate"><i>✦</i>
+    <span><b>灵感创作</b><small>主题与意象</small></span></button>
+    <button data-tab="review"><i>✓</i><span><b>诗作批改</b>
+        <small>格律与文笔</small>
+    </span></button><button data-tab="appreciate"><i>◌</i><span>
+        <b>诗词赏析</b>
+        <small>意象与手法</small></span></button>
+        <button data-tab="chat"><i>?</i>
+            <span><b>教学问答</b><small>知识与例证</small></span>
+        </button></nav>
+        <div id="evolution" class="evolution glass liquid">每一次反馈，都让回答更贴近你。</div>
+        <footer class="copyright">© 2026 BUPT_Mint-Green.<br>All rights reserved.</footer>
+    </section>
+<section class="work glass liquid"><div class="glass-orb orb-one"></div>
+    <div class="glass-orb orb-two"></div>
+    <div class="work-head"><div>
+        <small id="taskEn">CREATE</small>
+        <h2 id="taskTitle">灵感创作</h2>
+        <p id="taskDesc">按主题、体裁和情感生成诗作</p></div>
+        <button id="live" class="pill" disabled>实时语音未配置</button></div>
+<div class="forms"><div class="task-form active" data-form="generate">
+    <label>创作主题与要求</label>
+    <textarea class="query" placeholder="例如：江南春雨，画面清新含蓄……"></textarea>
+    <label>体裁</label>
+    <div class="choices form-choice">
+        <button class="selected" data-value="不限">不限</button>
+        <button data-value="五言绝句">五言绝句</button>
+        <button data-value="七言绝句">七言绝句</button>
+        <button data-value="五言律诗">五言律诗</button>
+        <button data-value="七言律诗">七言律诗</button></div>
+        <label>情感</label>
+        <div class="choices emotion-choice">
+            <button class="selected" data-value="">不限</button>
+            <button data-value="2">含蓄悲伤</button>
+            <button data-value="3">中性</button>
+            <button data-value="4">含蓄喜悦</button>
+            <button data-value="5">直白喜悦</button></div></div>
+<div class="task-form" data-form="review"><label>输入完整诗作</label>
+    <textarea class="poem" placeholder="每句换行，或用 | 分隔"></textarea>
+    <label>批改重点</label>
+    <textarea class="query compact" placeholder="例如：检查押韵，给出保留原意的修改稿"></textarea></div>
+<div class="task-form" data-form="appreciate">
+    <label>输入需要赏析的诗作</label>
+    <textarea class="poem" placeholder="粘贴诗作原文"></textarea>
+    <label>赏析角度</label>
+    <textarea class="query compact" placeholder="例如：重点分析意象、情感和表现手法"></textarea></div>
+<div class="task-form" data-form="chat">
+    <label>诗词教学问题</label>
+    <textarea class="query large" placeholder="例如：五言绝句和五言律诗有什么区别？"></textarea>
+    <div class="question-tips"><button>什么是诗眼？</button>
+        <button>如何判断押韵？</button>
+        <button>意象怎么赏析？</button></div></div></div>
+<div class="submit-row">
+    <span>四库协同 · LangGraph 自省</span>
+    <button id="submit">开始推演 <b>↑</b></button>
+    <button id="stop" class="pill hidden">停止</button></div></section>
+<section class="result glass liquid"><div class="result-glow"></div>
+    <div class="result-head"><div><small>ANALYSIS</small>
+        <h2>推演结果</h2></div>
+        <span id="resultMeta">等待输入</span></div>
+        <div id="trace" class="trace"></div>
+        <article id="answer" class="answer empty">答案将在这里实时生成</article>
+        <div id="analysis" class="analysis"></div>
+        <div id="feedback" class="feedback hidden">
+            <span>是否有帮助？</span>
+            <button data-helpful="true" data-category="有帮助">有帮助</button>
+            <button data-helpful="false" data-category="答非所问">答非所问</button>
+            <button data-helpful="false" data-category="格律不准">格律不准</button></div></section></main></div>
+<div id="livePanel" class="live-panel glass hidden"><i></i>
+    <span id="liveStatus">实时语音连接中</span>
+    <button id="interruptLive">打断</button>
+    <button id="closeLive">结束</button></div>
+    <script src="/assets/live.js"></script><script src="/assets/app.js"></script></body></html>
