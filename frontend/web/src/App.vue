@@ -1585,7 +1585,7 @@ function renderCharts() {
               name: timelineOrder[index],
               description: timelineDescriptions[timelineOrder[index]],
               itemStyle: {
-                color: eraColors[index],
+                color: "#2F6B4C",
                 borderColor: "#FCFDFE",
                 borderWidth: 2,
               },
@@ -1594,21 +1594,19 @@ function renderCharts() {
             emphasis: {
               focus: "self",
               scale: 1.4,
-              itemStyle: { shadowBlur: 16, shadowColor: "#84A9C0aa" },
+              itemStyle: { shadowBlur: 16, shadowColor: "#2F6B4Caa" },
             },
             lineStyle: {
               color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [
-                { offset: 0, color: eraColors[0] },
-                { offset: 0.34, color: eraColors[2] },
-                { offset: 0.67, color: eraColors[4] },
-                { offset: 1, color: eraColors[6] },
+                { offset: 0, color: "#438060" },
+                { offset: 1, color: "#1F4B36" },
               ]),
               width: 2.5,
             },
             areaStyle: {
               color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                { offset: 0, color: "#E5C85748" },
-                { offset: 1, color: "#68AEAA08" },
+                { offset: 0, color: "#43806048" },
+                { offset: 1, color: "#1F4B3608" },
               ]),
             },
           },
