@@ -85,6 +85,13 @@ All rights reserved.
   border-radius: 12px;
   background: rgba(255,255,255,.62);
 }
+.history-item time {
+  display: block;
+  margin-top: 3px;
+  color: #6b8174;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
 .history-item p { margin: 5px 0; white-space: pre-wrap; line-height: 1.6; }
 .branch-item {
   width: 100%;

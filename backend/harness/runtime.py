@@ -4,10 +4,10 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any, Callable, Literal
+from typing import Any, Callable, Literal, Optional
 
 PermissionLevel = Literal["allow", "confirm", "deny"]
-Hook = Callable[[dict[str, Any]], dict[str, Any] | None]
+Hook = Callable[[dict[str, Any]], Optional[dict[str, Any]]]
 
 
 @dataclass(frozen=True)

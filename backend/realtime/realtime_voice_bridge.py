@@ -8,6 +8,9 @@ from fastapi import WebSocket, WebSocketDisconnect
 from backend.config import LIVE_API_KEY, LIVE_ENABLED, LIVE_MODEL, LIVE_REALTIME_URL, LIVE_VOICE
 
 
+DASHSCOPE_REALTIME_URL = "wss://dashscope.aliyuncs.com/api-ws/v1/realtime"
+
+
 class RealtimeBridge:
     def __init__(self):
         self.enabled = bool(LIVE_API_KEY) and LIVE_ENABLED
@@ -16,7 +19,7 @@ class RealtimeBridge:
         if not self.enabled:
             raise RuntimeError("Realtime 智能服务未配置")
         import websockets
-        url = f"{LIVE_REALTIME_URL}?model={LIVE_MODEL}"
+        url = LIVE_REALTIME_URL or DASHSCOPE_REALTIME_URL
         headers = {"Authorization": f"Bearer {LIVE_API_KEY}"}
         chunks = []
         async with websockets.connect(url, additional_headers=headers, max_size=16 * 1024 * 1024, open_timeout=20) as provider:
@@ -55,10 +58,10 @@ class RealtimeBridge:
             return
         try:
             import websockets
-            url = f"{LIVE_REALTIME_URL}?model={LIVE_MODEL}"
+            url = LIVE_REALTIME_URL or DASHSCOPE_REALTIME_URL
             headers = {"Authorization": f"Bearer {LIVE_API_KEY}"}
             async with websockets.connect(url, additional_headers=headers, max_size=16 * 1024 * 1024) as provider:
-                await provider.send(json.dumps({"type": "session.update", "session": {"modalities": ["text", "audio"], "instructions": "你是诗承实时诗词助教。使用简洁自然的中文对话，可回答诗词知识、赏析、创作与学习问题。用户说话时立即停止当前回答并聆听。", "voice": LIVE_VOICE, "input_audio_format": "pcm16", "output_audio_format": "pcm16", "turn_detection": {"type": "server_vad", "threshold": 0.5, "prefix_padding_ms": 500, "silence_duration_ms": 900, "create_response": True, "interrupt_response": True}}}, ensure_ascii=False))
+                await provider.send(json.dumps({"type": "session.update", "session": {"modalities": ["text", "audio"], "instructions": "你是诗承实时诗词助教。使用简洁自然的中文对话，可回答诗词知识、赏析、创作与学习问题。用户说话时立即停止当前回答并聆听。", "voice": LIVE_VOICE, "input_audio_format": "pcm", "output_audio_format": "pcm", "turn_detection": {"type": "server_vad", "threshold": 0.5, "prefix_padding_ms": 500, "silence_duration_ms": 900, "create_response": True, "interrupt_response": True}, "input_audio_transcription": {}}}, ensure_ascii=False))
                 await browser.send_json({"type": "voice.ready", "mode": "full_duplex", "transcription_model": "qwen3-asr-flash-realtime", "input_sample_rate": 16000, "output_sample_rate": 24000})
 
                 async def browser_to_provider():

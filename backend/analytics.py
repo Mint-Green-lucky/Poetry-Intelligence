@@ -6,7 +6,7 @@ from functools import lru_cache
 from statistics import mean
 
 from backend.data_loader import load_ccpc, load_chinese_poetry, load_crrd, load_fspc, load_pqed, normalize_poem
-from backend.retrieval.hybrid_retriever import infer_form, poem_lines
+from backend.retrieval.hybrid_retriever import infer_form
 
 DYNASTY_NAMES = {"Tang": "唐", "Song": "宋", "Ming": "明", "Qing": "清", "Yuan": "元"}
 EMOTION_NAMES = {"1": "直白悲伤", "2": "含蓄悲伤", "3": "中性", "4": "含蓄喜悦", "5": "直白喜悦"}

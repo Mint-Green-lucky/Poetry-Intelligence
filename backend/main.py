@@ -1,8 +1,9 @@
 # © 2026 BUPT_Mint-Green
 # All rights reserved.
 
+from __future__ import annotations
+
 import asyncio
-import json
 import uuid
 from contextlib import asynccontextmanager
 from typing import Optional
@@ -15,7 +16,7 @@ from pydantic import BaseModel, Field
 
 from backend.agents.poetry_agent import PoetryAgent
 from backend.analytics import dataset_analytics
-from backend.config import FRONTEND_DIR, LIVE_ENABLED
+from backend.config import FRONTEND_DIR
 from backend.data_loader import dataset_summary
 from backend.realtime.realtime_voice_bridge import RealtimeBridge
 

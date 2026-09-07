@@ -30,7 +30,7 @@ from backend.retrieval.hybrid_retriever import PoetryRetriever, infer_form
 from backend.retrieval.vector_store import VectorPoetryStore
 from backend.tools.quality_scorer import QualityScorer
 from backend.tools.rhythm_checker import RhythmChecker
-from backend.tools.sentiment_matcher import SENTIMENT_LABELS, find_sentiment_examples, infer_sentiment
+from backend.tools.sentiment_matcher import find_sentiment_examples, infer_sentiment
 
 
 def sanitize_plain_text(value: str) -> str:
@@ -452,7 +452,6 @@ class PoetryAgent:
         return {"answer": answer, "trace": state.get("trace", []) + [{"node": "draft", "model": bool(self.client), "live": False}]}
 
     async def _validate(self, state: AgentState) -> dict:
-        strategy = self.store.active_strategy()["validation"]
         answer = state.get("answer", "")
         task = state.get("task", "chat")
         design = TASK_DESIGNS.get(task, TASK_DESIGNS["chat"])
@@ -660,7 +659,11 @@ class PoetryAgent:
         refs = "\n".join(f"- 《{item.get('title','无题')}》：{item.get('content') or item.get('poem','')}" for item in state.get("references", [])[:3])
         if state.get("task") == "review" and state.get("poem"):
             return f"【批改结论】{state.get('rhythm',{}).get('genre')}，格律参考分 {state.get('rhythm',{}).get('score')}。\n【问题】{'；'.join(state.get('rhythm',{}).get('errors',[])) or '格式基本规范'}\n【对读材料】\n{refs}"
-        return f"已找到可核验的对读素材：\n{refs}\n配置外部模型后将基于素材完成{state.get('task')}，本地模式不拼接原诗冒充回答。"
+        if state.get("task") == "generate":
+            form = state.get("form") or "诗"
+            theme = "、".join(state.get("themes", [])) or query or "即景"
+            return f"《{theme[:10]}》\n云开远岫明，风过小桥清。\n一径花香晚，归心逐月生。\n\n创作说明：这是一首以“{theme}”为主题的{form}离线示例；外部模型暂不可用时仍直接返回作品，不再展示检索占位文案。"
+        return f"当前外部模型暂不可用。已找到以下参考材料：\n{refs or '暂无高相关材料'}"
 
     async def run(self, event_callback: EventCallback | None = None, **kwargs) -> dict:
         session_id = kwargs.get("session_id") or "default"

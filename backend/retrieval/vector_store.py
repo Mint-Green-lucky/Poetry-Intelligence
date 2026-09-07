@@ -1,12 +1,12 @@
 # © 2026 BUPT_Mint-Green
 # All rights reserved.
 
+import importlib
 from typing import Optional
 
 from backend.config import CHROMA_DIR, EMBEDDING_MODEL, VECTOR_RAG_ENABLED
 from backend.data_loader import normalize_poem
 from backend.retrieval.hybrid_retriever import infer_form
-
 
 class VectorPoetryStore:
     def __init__(self):
@@ -18,11 +18,11 @@ class VectorPoetryStore:
             self.reason = "配置已关闭向量检索"
             return
         try:
-            import chromadb
-            from sentence_transformers import SentenceTransformer
+            chromadb = importlib.import_module("chromadb")
+            sentence_transformers = importlib.import_module("sentence_transformers")
             CHROMA_DIR.mkdir(parents=True, exist_ok=True)
             self.client = chromadb.PersistentClient(path=str(CHROMA_DIR))
-            self.embedding = SentenceTransformer(EMBEDDING_MODEL, local_files_only=True)
+            self.embedding = sentence_transformers.SentenceTransformer(EMBEDDING_MODEL, local_files_only=True)
             self.available = True
             self.reason = "ready"
         except Exception as error:

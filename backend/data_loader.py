@@ -1,6 +1,8 @@
 # © 2026 BUPT_Mint-Green
 # All rights reserved.
 
+from __future__ import annotations
+
 import json
 import zipfile
 from functools import lru_cache
@@ -9,7 +11,6 @@ from typing import Optional
 
 from backend.config import (
     CCPC_TEST,
-    CHINESE_POETRY_ARCHIVE,
     CCPC_TRAIN,
     CCPC_VALID,
     CRRD_PINGSHENG,

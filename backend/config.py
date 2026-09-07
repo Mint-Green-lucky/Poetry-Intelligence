@@ -6,9 +6,8 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
-load_dotenv()
-
 PROJECT_DIR = Path(__file__).resolve().parent.parent
+load_dotenv(PROJECT_DIR / ".env")
 DATA_ROOT = PROJECT_DIR / "a_datasets"
 THU_DATA_DIR = DATA_ROOT / "Thu-Datasets-master"
 FRONTEND_DIR = PROJECT_DIR / "frontend" / "dist"

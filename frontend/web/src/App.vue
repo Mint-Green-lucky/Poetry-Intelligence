@@ -258,6 +258,20 @@ const sanitizeAnswer = (value) =>
     .replace(/[ \t]+\n/g, "\n")
     .replace(/\n{3,}/g, "\n\n")
     .trim();
+const formatHistoryTime = (value: string) => {
+  if (!value) return "时间未知";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+  return new Intl.DateTimeFormat("zh-CN", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false,
+  }).format(date).replace(/\//g, "-");
+};
 const cleanHistoryContent = (value) =>
   sanitizeAnswer(value)
     .replace(/(?:严格|完全)?(?:依照|依据|按照|遵循|依)?[^。；\n]{0,20}(?:正体|词谱|格律|格式)[^。；\n]*(?:[。；]|$)/g, "")
@@ -2440,6 +2454,7 @@ onUnmounted(() => charts.forEach((c) => c.dispose()));
           <small class="history-scope-note">不同功能的历史相互独立，避免创作条件、批改意见和赏析上下文互相干扰。</small>
           <article v-for="item in workspace.history || []" :key="item.id" class="history-item">
             <b>{{ item.role === 'user' ? '你' : '诗承' }}</b>
+            <time :datetime="item.created_at">{{ formatHistoryTime(item.created_at) }}</time>
             <p>{{ cleanHistoryContent(item.content) }}</p>
             <button class="ghost mini" @click="rollbackTo(item.id)">从此处分叉</button>
           </article>
