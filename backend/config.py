@@ -41,3 +41,9 @@ LIVE_VOICE = os.getenv("LIVE_VOICE", "alloy")
 MAX_HISTORY = int(os.getenv("MAX_HISTORY", "8"))
 EVOLUTION_MIN_DELTA = float(os.getenv("EVOLUTION_MIN_DELTA", "0.02"))
 EVOLUTION_ROLLBACK_WINDOW = int(os.getenv("EVOLUTION_ROLLBACK_WINDOW", "10"))
+
+# MCP（Model Context Protocol）默认关闭：未设置 MCP_ENABLED=true 或未配置
+# mcp_servers.json 时，不会连接任何外部 Server，也不会向工具目录新增条目。
+MCP_ENABLED = os.getenv("MCP_ENABLED", "false").lower() == "true"
+MCP_SERVERS_CONFIG = PROJECT_DIR / "mcp_servers.json"
+MCP_CALL_TIMEOUT = float(os.getenv("MCP_CALL_TIMEOUT", "15"))

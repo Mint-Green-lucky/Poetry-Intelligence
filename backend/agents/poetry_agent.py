@@ -16,12 +16,14 @@ from langgraph.graph import END, StateGraph
 from openai import AsyncOpenAI
 
 from backend.agents.state import AgentState
-from backend.config import MAX_HISTORY, OPENAI_API_KEY, OPENAI_BASE_URL, OPENAI_MODEL
+from backend.config import MAX_HISTORY, MCP_CALL_TIMEOUT, MCP_ENABLED, MCP_SERVERS_CONFIG, OPENAI_API_KEY, OPENAI_BASE_URL, OPENAI_MODEL
 from backend.data_loader import load_ccpc, load_chinese_poetry, load_crrd, load_fspc, load_pqed
 from backend.agents.specialist_agent import AGENTS, SPECS
 from backend.graph.poetry_workflow import build_poetry_workflow
 from backend.harness.context_manager import ContextManager
+from backend.harness.mcp_client import MCPToolManager, load_server_configs
 from backend.harness.memory_manager import MemoryManager
+from backend.harness.runtime import TOOL_REGISTRY
 from backend.harness.tool_executor import ToolExecutor
 from backend.harness.workspace_manager import WorkspaceManager
 from backend.persistence.agent_store import AgentStore
@@ -187,9 +189,12 @@ class PoetryAgent:
                 pass
         self.store = AgentStore()
         self.context_manager = ContextManager(self.store, MAX_HISTORY)
-        self.memory_manager = MemoryManager(self.store)
+        self.memory_manager = MemoryManager(self.store, self.vector)
         self.workspace_manager = WorkspaceManager(self.store)
         self.tool_executor = ToolExecutor(self._tool_call)
+        # 默认关闭：未设置 MCP_ENABLED=true 或没有 mcp_servers.json 时 connections 为空，
+        # 不向 TOOL_REGISTRY 新增条目，现有 Specialist Agent 工具白名单不受影响。
+        self.mcp = MCPToolManager(TOOL_REGISTRY, load_server_configs(MCP_SERVERS_CONFIG), MCP_ENABLED, MCP_CALL_TIMEOUT)
         self.realtime = RealtimeBridge()
         self.client = AsyncOpenAI(api_key=OPENAI_API_KEY, base_url=OPENAI_BASE_URL, timeout=60, max_retries=2) if OPENAI_API_KEY else None
         self.live_enabled = self.realtime.enabled
@@ -343,6 +348,8 @@ class PoetryAgent:
             return [item for item in state.get("memory", []) if item.get("kind") == "weakness"]
         if name == "version_writer":
             return {"pending": True, "task": task, "commit_after_validation": True}
+        if name.startswith("mcp__"):
+            return self.mcp.call(name, {"query": source, "task": task})
         return {"unsupported_tool": name}
 
     @staticmethod
@@ -674,7 +681,10 @@ class PoetryAgent:
         workspace = self.workspace_manager.ensure(session_id, conversation_id, branch_id)
         kwargs.update(workspace)
         kwargs = self.context_manager.hydrate(kwargs, workspace["branch_id"])
-        kwargs["memory"] = self.memory_manager.recall(session_id, task)
+        exact_memory = self.memory_manager.recall(session_id, task)
+        semantic_query = kwargs.get("query") or kwargs.get("poem") or ""
+        semantic_memory = self.memory_manager.semantic_recall(session_id, semantic_query)
+        kwargs["memory"] = self.memory_manager.merge_recall(exact_memory, semantic_memory)
         self.event_callback = event_callback
         try:
             await self._event("draft", f"LangGraph 正在路由至 {task} 专属 Handler")
@@ -696,6 +706,7 @@ class PoetryAgent:
             result["memories"] = self.store.memories(session_id, task)
             result["versions"] = self.store.versions(kwargs["conversation_id"])
             result["rag"] = self.vector.status()
+            result["mcp"] = self.mcp.status()
             result["evidence"] = [{"title": item.get("title", "无题"), "author": item.get("author") or item.get("poet") or "佚名", "dynasty": item.get("dynasty", ""), "content": item.get("content") or item.get("poem", ""), "source": item.get("source", "CCPC"), "score": round(float(item.get("hybrid_score", 0)), 3), "emotion": (item.get("setiments") or item.get("sentiments") or {}).get("holistic")} for item in result.get("references", [])[:6]]
             return result
         except Exception as error:

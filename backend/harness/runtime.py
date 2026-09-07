@@ -25,6 +25,10 @@ class ToolRegistry:
     def get(self, name: str) -> ToolDefinition | None:
         return self._definitions.get(name)
 
+    def register(self, definition: ToolDefinition) -> None:
+        """动态登记新工具（如 MCP Server 发现的工具），不影响既有条目。"""
+        self._definitions[definition.name] = definition
+
     def catalog(self, names: list[str] | tuple[str, ...]) -> dict[str, dict[str, Any]]:
         result = {}
         for name in names:

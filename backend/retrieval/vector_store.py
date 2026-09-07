@@ -75,6 +75,24 @@ class VectorPoetryStore:
             result["overall"] = float(record["overall score"])
         return result
 
+    def upsert(self, name: str, doc_id: str, text: str, metadata: dict) -> bool:
+        """向指定集合增量写入单条记录，供流式产生的数据（如长期记忆）使用。
+
+        与 build() 面向语料库批量灌入不同，这里按 doc_id 幂等 upsert，
+        不做已存在数量校验，失败时和其余向量能力一样静默降级。
+        """
+        if not self.available or not text.strip():
+            return False
+        try:
+            collection = self._collection(name)
+            embedding = self.embedding.encode([text], normalize_embeddings=True).tolist()
+            collection.upsert(ids=[doc_id], documents=[text], embeddings=embedding, metadatas=[metadata])
+            return True
+        except Exception as error:
+            self.available = False
+            self.reason = f"向量检索已降级：{error}"
+            return False
+
     def search(self, name: str, query: str, top_k: int, filters: Optional[dict] = None) -> list[dict]:
         if not self.available or self.count(name) == 0 or not query.strip():
             return []
@@ -91,4 +109,4 @@ class VectorPoetryStore:
             return []
 
     def status(self) -> dict:
-        return {"available": self.available, "reason": self.reason, "collections": {name: self.count(name) for name in ("poetry", "ccpc", "fspc", "pqed")}}
+        return {"available": self.available, "reason": self.reason, "collections": {name: self.count(name) for name in ("poetry", "ccpc", "fspc", "pqed", "memory")}}
