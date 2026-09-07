@@ -1,12 +1,11 @@
 # Poetry Intelligence: An Intelligent Space for Learning Chinese Poetry
 
-![UI](D:\大学学习\研究生学习\硕士课程\竞赛活动\2026年8月第21届中国研究生人工智能创新大赛\诗承\poetry-agent\frontend\UI.jpg)
-
 [English](#english-version) · [中文](#中文版本)
 
 <a id="english-version"></a>
 
 ## English Version
+![alt text](efae8e2332a80434f6fc8ba44085d337.png)
 
 **Poetry Intelligence** is a multi-agent system for learning, creating, appreciating, reciting, comparing, and teaching classical and modern Chinese poetry. Built with LangGraph, it orchestrates seven isolated specialist agents and combines poetry texts, tonal and rhyme patterns, fine-grained emotion annotations, and writing-quality data into a traceable, verifiable, continuously editable poetry workspace.
 
@@ -125,6 +124,7 @@ The launcher uses its own directory as the project root, selects an available Py
 > The system does not record or display hidden chain-of-thought. Stored plans contain executable steps and constraints only; observations contain summarized tool results and validation feedback.
 
 ### Chinese Version
+![alt text](94e16c2485a2c198b994462824e74386.png)
 
 <a id="中文版本"></a>
 
